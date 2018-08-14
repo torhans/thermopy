@@ -6,13 +6,13 @@ Created on Sun Aug 23 17:34:44 2015
 """
 from thermopy import nasa9polynomials as nasa9
 from thermopy.iapws import Water
-from numpy import array, dot , linspace , stack , ones, zeros
+from numpy import array, dot , linspace , ones, zeros, hstack
 
 
 def nist_enthalpy_enginering(Tlow,Thigh,Nt,coefs):
     temp= linspace(Tlow,Thigh,Nt)
     T2=temp.reshape(-1,1)/1000
-    Ta= stack((T2,T2**2/2,T2**3/3,T2**4/4,-1/T2, ones(T2.shape), zeros(T2.shape),zeros(T2.shape)),axis=-1)
+    Ta= hstack((T2,T2**2/2,T2**3/3,T2**4/4,-1/T2, ones(T2.shape), zeros(T2.shape),zeros(T2.shape)))
     return( dot(Ta,coefs))
 
 def test_enthalpy_tests():
