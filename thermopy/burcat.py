@@ -154,7 +154,7 @@ class Compound(object):
         J/mol.
         """
         if T >= self._T_limit_low and T < self._T_limit_high:
-            return self.enthalpy(T) - self.entropy(T) * T
+            return self.enthalpy_engineering(T) - self.entropy(T) * T
         else:
             raise ValueError("Temperature out of range")
 
@@ -181,7 +181,7 @@ class Database(object):
         Create the instance and the elements at boot, otherwise be
         prepared to face huge computation times.
         """
-        self.db = parse(str(os.path.dirname(os.path.dirname(__file__)) +
+        self.db = parse(str(os.path.dirname(__file__) +
                         '/databases/burcat_thr.xml')).getroot()
 
     def list_compound(self, cas_or_formula):
@@ -314,7 +314,7 @@ class Reaction(Database):
     reaction1 = burcat.Reaction(None, 600, ['n2 ref element',
     'h2 ref element'], ['nh3 anharmonic'], [1, 3], [2])"""
     def __init__(self, p, T, reagents, products, rcoefs=None, pcoefs=None):
-        Elementdb.__init__(self)
+        Database.__init__(self)
         self.T = T
         self.p = p
         self.reagents = []
@@ -325,7 +325,7 @@ class Reaction(Database):
         # error checking
         elements_in_reagents = set()
         for compound in reagents:
-            if isinstance(compound, Element):
+            if isinstance(compound, Compound):
                 self.reagents.append(compound)
                 elements_in_reagents.add(tuple(compound._elements))
             elif isinstance(compound, str):
@@ -334,7 +334,7 @@ class Reaction(Database):
                     self.set_compound(compound)._elements))
         elements_in_products = set()
         for compound in products:
-            if isinstance(compound, Element):
+            if isinstance(compound, Compound):
                 self.products.append(compound)
                 elements_in_products.add(tuple(compound._elements))
             elif isinstance(compound, str):

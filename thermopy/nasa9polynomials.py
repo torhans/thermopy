@@ -160,9 +160,10 @@ class Compound(object):
         """
         xml_compounds_list = []
         for one_xml_compound in xml_compound:
-            xml_compounds_list.append(tuple(*map(
-                lambda x, y: (x, int(y)),
-                *one_xml_compound.items()[0])))
+            xml_compounds_list.append(tuple((one_xml_compound.items()[0][0],int(one_xml_compound.items()[0][1]))))
+            #xml_compounds_list.append(tuple(*map(
+                #lambda x, y: (x, int(y)),
+                #*tt)))
         return xml_compounds_list
 
     def _evaluate_temperature_interval(self, T):
@@ -248,20 +249,26 @@ class Compound(object):
             Mg(OH)2(cr) - -906097.801815
 
         """
-        coefficients = np.empty(9, dtype=np.float32)
+        coefficients = np.empty(9, dtype='d')
         for (i, coef) in enumerate(self._xml_compound.findall(
                 'T_range')[self._evaluate_temperature_interval(T)]):
-            coefficients[i] = np.array(coef.text, dtype=np.float32)
+            coefficients[i] = np.array(coef.text, dtype='d')
         exponents = np.array([-2, -1, 0, 1, 2, 3, 4, -1],
                              dtype=np.signedinteger)
         other_factors = np.array([-1, np.log(T), 1, 0.5, 1/3, 0.25, 0.2, 1],
-                                 dtype=np.float32)
+                                 dtype='d')
+        #return np.sum(
+            #np.multiply(
+                #np.multiply(
+                    #np.power(T, exponents, dtype=np.float32),
+                    #coefficients[0:8]),
+                #other_factors), dtype=np.float32) * _R * T
         return np.sum(
             np.multiply(
                 np.multiply(
-                    np.power(T, exponents, dtype=np.float32),
+                    np.power(T, exponents,dtype='d'),
                     coefficients[0:8]),
-                other_factors), dtype=np.float32) * _R * T
+                other_factors)) * _R * T
 
     def entropy(self, T):
         u"""
@@ -457,7 +464,7 @@ class Database(object):
     def __init__(self):
         u"""Initializes the database."""
         xmlPath = os.path.join(
-            os.path.dirname(__file__), os.pardir, 'databases',
+            os.path.dirname(__file__),  'databases',
             'nasa9polynomials.xml')
         self._nasa9 = ET.parse(os.path.abspath(xmlPath))
         self._root = self._nasa9.getroot()
@@ -768,7 +775,7 @@ class Reaction(object):
         deltah = 0
         for (coefficient, compound) in zip(self._rcoefs, self._reactants):
             deltah = deltah - coefficient * compound.enthalpy(self.T)
-        for (coefficient, compound) in zip(self._rcoefs, self._products):
+        for (coefficient, compound) in zip(self._pcoefs, self._products):
             deltah = deltah + coefficient * compound.enthalpy(self.T)
         return deltah
 
@@ -812,7 +819,7 @@ class Reaction(object):
         deltas = 0
         for (coefficient, compound) in zip(self._rcoefs, self._reactants):
             deltas = deltas - coefficient * compound.entropy(self.T)
-        for (coefficient, compound) in zip(self._rcoefs, self._products):
+        for (coefficient, compound) in zip(self._pcoefs, self._products):
             deltas = deltas + coefficient * compound.entropy(self.T)
         return deltas
 
@@ -854,7 +861,7 @@ class Reaction(object):
         deltag = 0
         for (coefficient, compound) in zip(self._rcoefs, self._reactants):
             deltag = deltag - coefficient * compound.gibbs_energy(self.T)
-        for (coefficient, compound) in zip(self._rcoefs, self._products):
+        for (coefficient, compound) in zip(self._pcoefs, self._products):
             deltag = deltag + coefficient * compound.gibbs_energy(self.T)
         return deltag
 

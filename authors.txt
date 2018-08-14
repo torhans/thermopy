@@ -7,3 +7,7 @@ Adel Qalieh <adelq@sas.upenn.edu>
 
 Version 0.5:
 Felipe M. Vieira <fmv1992@gmail.com>
+
+
+Version 0.6:
+Torben M. Hansen <builder@sciomnis.com>

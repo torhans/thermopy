@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
 import thermopy
+import os
+from nose import __file__ as pip_loc
 
 my_long_description = str(
 """
@@ -45,19 +47,22 @@ See the documentation for further details and examples.
 """)
 
 
+dataloc = os.path.join( os.path.split( os.path.split(pip_loc)[0])[0],"databases")
+# dataloc = os.path.join( os.path.split( os.path.split(pip_loc)[0])[0],"thermopy","databases")
+
 setup(name="thermopy",
       version=thermopy.__version__,
       description='Python package for thermodynamic calculations and units '
                   'conversion.',
       long_description = my_long_description,
       author="Felipe M. Vieira",
-      author_email="fmv1992@gmail.com",
-      url="github: https://github.com/guillemborrell/thermopy",
+      author_email="builder@sciomnis.com",
+      url="github: https://github.com/torhans/thermopy",
       license="GPL",
       packages=find_packages(),
       include_package_data=True,
-      data_files=[('databases', ['databases/burcat_thr.xml',
-                                 'databases/nasa9polynomials.xml'])],
+      data_files=[(dataloc, ['thermopy/databases/burcat_thr.xml',
+                                 'thermopy/databases/nasa9polynomials.xml'])],
       install_requires=['scipy>=0.6.0', 'numpy>=1.2.1'],
       test_suite='nose.collector',
       tests_require=['nose'],
