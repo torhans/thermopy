@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Burcat module is intended to give access to the Burcat's Database [1].
 
@@ -98,6 +99,7 @@ class Compound(object):
         """
         Computes the sensible enthalpy in J/mol.
         """
+        T=np.array(T,'d')
         Ta = np.array([1, T / 2, T ** 2 / 3, T ** 3 / 4, T ** 4 / 5, 1 / T],
                       'd')
         if T >= self._T_limit_low and T <= 1000:

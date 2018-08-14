@@ -21,7 +21,7 @@ def test_enthalpy_tests():
     RE = abs(delta_cp_burcat - delta_cp_lit) / delta_cp_burcat
     """
     # Relative Error
-    RE = 1/100
+    RE = 1./100.
     # Initialization
     database = nasa9.Database()
 
@@ -199,11 +199,10 @@ def test_reactions_test():
     
     prods=(O2,N2)
     reacts=(N2O,)
-    reacts_coefs=(2,)
-    prods_coefs=(1,2)
+    reacts_coefs=(2.,)
+    prods_coefs=(1.,2.)
     
-    reaction = nasa9.Reaction(1000, reacts, prods, reacts_coefs,prods_coefs)
-    print(reaction.equilibrium_constant)
+    reaction = nasa9.Reaction(1000.0, reacts, prods, reacts_coefs,prods_coefs)
    
     assert abs(reaction.equilibrium_constant() - 1.9675138130075416e+16)/1.9675138130075416e+16 < 0.01
     

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 u"""
 Calculates water and steam properties.
 
@@ -52,7 +53,7 @@ class Water(object):
     # ideal gas constant was already instantiated
     Tc = 647.096    # Critical point temperature (K)
     pc = Pressure(22.064).unit('MPa')     # Critical point pressure (MPa)
-    rhoc = 322        # Critical point density kg/m3
+    rhoc = 322.0        # Critical point density kg/m3
     Tt = 273.16     # Triple point temperature (K)
     pt = 611.657    # Triple point pressure (Pa)
     ht = 0.611783    # Enthalpy at triple point (J/kg)
@@ -398,6 +399,9 @@ class Water(object):
         # calculate rho to be used in PHI
 
         def obj(x):
+            print(type(self.p))
+            print(type(x),x)
+            print(type(self.rhoc),self.rhoc)
             return (self.p - 1000 * x * self.R * self.T * (x / self.rhoc) *
                     (n1 / (x / self.rhoc) + sum(
                         ni * Ii * (x / self.rhoc) ** (Ii - 1) * tau ** Ji)))

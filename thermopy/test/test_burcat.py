@@ -15,7 +15,7 @@ def test_enthalpy_massic_tests():
     RE = abs(delta_cp_burcat - delta_cp_lit) / delta_cp_burcat
     """
     # Relative Error
-    RE = 1/100
+    RE = 1.0/100
     # Initialization
     database = burcat.Database()
 
@@ -26,7 +26,7 @@ def test_enthalpy_massic_tests():
     hydrogen = database.set_compound('h2 ref element')
     delta_h_burcat = (hydrogen.enthalpy_massic(700)
                       - hydrogen.enthalpy_massic(600))
-    delta_h_literature = 14.55 * 100 * 1e3  # from 600 to 700 K
+    delta_h_literature = 14.55 * 100.0 * 1.0e3  # from 600 to 700 K
     re = abs(delta_h_burcat - delta_h_literature) / delta_h_burcat
     assert re < RE
 
@@ -109,6 +109,9 @@ def test_enthalpy_massic_tests():
     delta_h_burcat = al2so3.enthalpy(2300) - al2so3.enthalpy(300)
     delta_h_literature = (251.0 - 0.12) * 1e3
     re = abs(delta_h_burcat - delta_h_literature) / delta_h_burcat
+    print(delta_h_burcat)
+    print(delta_h_literature)
+    print(re,RE)
     assert re < RE
     # CRN(S) CHROMIUM NITRIDE CONDENSED
     crn = database.set_compound('CrN(s)')

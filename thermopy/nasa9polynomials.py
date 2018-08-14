@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 u"""
 Enable the NASA 9 term polynomials to create chemical compound objects.
 
@@ -188,6 +189,7 @@ class Compound(object):
         number 1 (as opposed to zero).
 
         """
+        T=np.array(T,'d')
         for (i, Trange) in enumerate(self._xml_compound.findall('T_range')):
             if (float(Trange.attrib['Tlow']) <= T <= float(
                     Trange.attrib['Thigh'])):
@@ -217,15 +219,16 @@ class Compound(object):
             lithium;bromide: LiBr - 39.6593057506
 
         """
-        coefficients = np.empty(9, dtype=np.float32)
+        T=np.array(T,'d')
+        coefficients = np.empty(9, dtype='d')
         for (i, coef) in enumerate(self._xml_compound.findall(
                 'T_range')[self._evaluate_temperature_interval(T)]):
-            coefficients[i] = np.array(coef.text, dtype=np.float32)
+            coefficients[i] = np.array(coef.text, dtype='d')
         exponents = np.array([-2, -1, 0, 1, 2, 3, 4], dtype=np.signedinteger)
         return np.sum(
             np.multiply(
-                np.power(T, exponents, dtype=np.float32),
-                coefficients[0:7]), dtype=np.float32) * _R
+                np.power(T, exponents, dtype='d'),
+                coefficients[0:7]), dtype='d') * _R
 
     def enthalpy(self, T):
         u"""
@@ -249,20 +252,21 @@ class Compound(object):
             Mg(OH)2(cr) - -906097.801815
 
         """
+        T=np.array(T,'d')
         coefficients = np.empty(9, dtype='d')
         for (i, coef) in enumerate(self._xml_compound.findall(
                 'T_range')[self._evaluate_temperature_interval(T)]):
             coefficients[i] = np.array(coef.text, dtype='d')
         exponents = np.array([-2, -1, 0, 1, 2, 3, 4, -1],
                              dtype=np.signedinteger)
-        other_factors = np.array([-1, np.log(T), 1, 0.5, 1/3, 0.25, 0.2, 1],
+        other_factors = np.array([-1.0, np.log(T), 1.0, 0.5, 1.0/3.0, 0.25, 0.2, 1.0],
                                  dtype='d')
         #return np.sum(
             #np.multiply(
                 #np.multiply(
-                    #np.power(T, exponents, dtype=np.float32),
+                    #np.power(T, exponents, dtype='d'),
                     #coefficients[0:8]),
-                #other_factors), dtype=np.float32) * _R * T
+                #other_factors), dtype='d') * _R * T
         return np.sum(
             np.multiply(
                 np.multiply(
@@ -291,20 +295,21 @@ class Compound(object):
             argon: Ar - 146.546470215
 
         """
-        coefficients = np.empty(9, dtype=np.float32)
+        T=np.array(T,'d')
+        coefficients = np.empty(9, dtype='d')
         for (i, coef) in enumerate(self._xml_compound.findall(
                 'T_range')[self._evaluate_temperature_interval(T)]):
-            coefficients[i] = np.array(coef.text, dtype=np.float32)
+            coefficients[i] = np.array(coef.text, dtype='d')
         exponents = np.array([-2, -1, 0, 1, 2, 3, 4, 0, 0],
                              dtype=np.signedinteger)
-        other_factors = np.array([-0.5, -1, np.log(T), 1, 0.5, 1/3, 0.25,
-                                  0, 1],
-                                 dtype=np.float32)
+        other_factors = np.array([-0.5, -1., np.log(T), 1., 0.5, 1./3., 0.25,
+                                  0., 1.],
+                                 dtype='d')
         return np.sum(
             np.multiply(
-                np.multiply(np.power(T, exponents, dtype=np.float32),
+                np.multiply(np.power(T, exponents, dtype='d'),
                             coefficients[:]),
-                other_factors), dtype=np.float32) * _R
+                other_factors), dtype='d') * _R
 
     def gibbs_energy(self, T):
         u"""
@@ -327,6 +332,7 @@ class Compound(object):
             cesium;bromide: CsBr(cr) - -436504.410044
 
         """
+        T=np.array(T,'d')
         return self.enthalpy(T) - T * self.entropy(T)
 
     def __str__(self):
